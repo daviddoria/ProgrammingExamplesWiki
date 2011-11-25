@@ -12,6 +12,7 @@ if( Boost_FOUND )
   include_directories( BEFORE ${Boost_INCLUDE_DIRS} )
 
   add_subdirectory( IntegersInARange )
+  add_subdirectory( IntegersInARangeWithWeightedProbability )
 
 else()
   message( "Boost not found" )
