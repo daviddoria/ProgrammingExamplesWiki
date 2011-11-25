@@ -22,7 +22,7 @@ int main( int , char * [] )
 
   for( int i = 0; i < NumberOfIterations; i++ )
     {
-    std::cout << "i ** " << distribution( LowerBound, UpperBound ) << std::endl;
+    std::cout << i <<" ** " << distribution( LowerBound, UpperBound ) << std::endl;
     }
 
   return EXIT_SUCCESS;
