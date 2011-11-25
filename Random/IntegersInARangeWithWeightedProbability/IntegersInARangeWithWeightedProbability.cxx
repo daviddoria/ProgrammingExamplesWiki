@@ -13,7 +13,7 @@ std::vector< double > ProbabilityGenerator( int LowerBound, int UpperBound,
                                             std::vector< int > SpecialValues )
 {
   size_t N = static_cast< size_t >( UpperBound - LowerBound + 1 );
-  double value = 1. / static_cast< double >( N + 9 * SpecialValues.size() );
+  double value = 1. / static_cast< double >( N + 19 * SpecialValues.size() );
 
   std::vector< double > probabilities( N, value );
 
@@ -21,22 +21,23 @@ std::vector< double > ProbabilityGenerator( int LowerBound, int UpperBound,
         it != SpecialValues.end();
        ++it )
     {
-    probabilities[ *it ] = 10. * value;
+    probabilities[ *it - LowerBound ] = 20. * value;
     }
 
   return probabilities;
 }
 
-int distribution( int LowerBound, int UpperBound,
-                  std::vector< double > probability )
+int distribution( std::vector< double > probability )
 {
   std::vector< double > cumulative;
 
   std::partial_sum( probability.begin(), probability.end(), std::back_inserter( cumulative ) );
-  boost::uniform_real<> distribution( 0, cumulative.back() );
+  boost::uniform_real<> distribution( 0., cumulative.back() );
   boost::variate_generator< boost::mt19937&, boost::uniform_real<> > randomizer( generator, distribution );
 
-  return ( std::lower_bound( cumulative.begin(), cumulative.end(), randomizer() ) - cumulative.begin() ) + 1;
+  double value = randomizer();
+
+  return ( std::lower_bound( cumulative.begin(), cumulative.end(), value ) - cumulative.begin() );
 }
 
 int main( int , char * [] )
@@ -45,17 +46,17 @@ int main( int , char * [] )
   int UpperBound = 100;
 
   std::vector< int > SpecialValues;
-  SpecialValues.push_back( 1 );
-  SpecialValues.push_back( 50 );
-  SpecialValues.push_back( 100 );
+  SpecialValues.push_back( 8 );
+  SpecialValues.push_back( 24 );
+  SpecialValues.push_back( 36 );
 
   std::vector< double > probability = ProbabilityGenerator( LowerBound, UpperBound, SpecialValues );
 
-  int NumberOfIterations = 100;
+  int NumberOfIterations = 25;
 
   for( int i = 0; i < NumberOfIterations; i++ )
     {
-    std::cout << i <<" ** " << distribution( LowerBound, UpperBound, probability ) << std::endl;
+    std::cout << i <<" ** " << LowerBound + distribution( probability ) << std::endl;
     }
 
   return EXIT_SUCCESS;
