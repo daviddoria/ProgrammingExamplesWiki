@@ -1,1 +1,9 @@
 *~
+
+CMakeLists.txt.user*
+
+*.kdev*
+
+build/
+BUILD/
+Build/
